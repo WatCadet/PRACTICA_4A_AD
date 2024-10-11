@@ -11,6 +11,10 @@ Rendering:
     embed-resources: true
 ---
 
+**Dídac Capó Peña**:
+
+[Ver en GitHub](https://github.com/WatCadet/PRACTICA_4_AD)
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
@@ -18,6 +22,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```{r, echo=FALSE}
 library(tidyverse)
 library(readr)
+library(dplyr)
+library(MASS)
 ```
 
 ## Problema 1
@@ -25,7 +31,34 @@ library(readr)
 Simula un conjunto de datos que tenga 5 variables $X_1, X_2, X_3, X_4, X_5$, con 50 observaciones que sigan distribuciones normales con diferentes medias y varianzas cada una. Establece que una o más de las variables sea una combinación lineal de las otras. Por ejemplo, puedes definir que: $X_5 = 2X_1 + 3X_2$. Verifica que se cumple el teorema de la dimensión.
 
 ### Respuesta
+Creamos el data:
+```{r}
+set.seed(123)
 
+X1 <- rnorm(50, mean = 5, sd = 1)  
+X2 <- rnorm(50, mean = 10, sd = 2) 
+X3 <- rnorm(50, mean = 15, sd = 3) 
+X4 <- rnorm(50, mean = 20, sd = 4) 
+
+X5 <- 2 * X1 + 3 * X2
+
+data <- data.frame(X1, X2, X3, X4, X5)
+X <- as.matrix(data)
+```
+Verificación del teorema de la dimensión.
+Para ello definimos la matriz de covarianzas:
+```{r}
+n=50
+S = (n-1)/n*cov(X)
+S
+```
+Comprovem el rang de la matriu $S$
+
+```{r}
+rango <- qr(S)$rank
+rango
+```
+El rango de la matriz es: 4. El teorema de la dimensión se cumple, ya que el rango es inferior al número de variables porque X5 es una combinación lineal de X1 y X2.
 
 ## Problema 2
 
@@ -45,6 +78,57 @@ Ahora, transforma la matriz de datos $X$ en una nueva matriz $Y = X T$. Calcula 
 
 ### Respuesta
 
+Utilizamos las variables del apartado anterior $X_1,X_2,X_3,X_4$ y las metemos en una matriz llamada `M`, usamos esta notación para no sobreescribir la matriz del apartado anterior
+
+```{r}
+data2 <- data.frame(X1, X2, X3, X4)
+M <- as.matrix(data2)
+```
+
+Definimos la matriz de transformación lineal T como nos pide el enunciado y con dimensiones $4\times4$
+```{r}
+T <- diag(c(2, 0.5, 1.5, 1))
+```
+
+Transformamos la matriz de datos `M` en Y usando $Y = \cdot T$
+```{r}
+Y <- M %*% T
+```
+
+Calculamos el vector de medias de las variables transformadas Y, sabemos por teoria que $\overline{y}^t = \overline{x}^t T$
+
+Calculamos el vector de medias de $M$:
+```{r}
+m_barra <- colMeans(M)
+```
+Calculamos el vector de medias de $Y$ de las dos maneras:
+
+```{r}
+m_barraT <- t(m_barra)
+y_barra = m_barraT %*% T
+y_barra
+```
+
+
+```{r}
+y_barra2 <- colMeans(Y)
+y_barra2
+```
+Vemos que coinciden.
+
+Ahora calculamos la matriz de covarianzas de las variables transformadas Y, que sabemos que $S_y=T^tST$
+```{r}
+Sb = cov(M)
+S_y = T %*% Sb %*% T
+S_y
+```
+
+
+```{r}
+S_Y2 <- cov(Y)
+S_Y2
+```
+
 
 ## Problema 3
 
@@ -63,10 +147,85 @@ $$T = \begin{pmatrix}
 
 Aplique la transformación a la matriz de datos y calcule la distancia de Mahalanobis para cada observación con respecto a la media del conjunto de datos transformado.
 
-a. ¿Son las distancias de Mahalanobis iguales antes y después de la transformación lineal? Explica.
+### Respuesta
 
-b. La distancia de Mahalanobis al cuadrado debería seguir una distribución $\chi^2$ con $p$ grados de libertad, donde $p$ es el número de variables. Verifica si esto se cumple en tu caso. Justifica tu respuesta en función del test estadístico apropiado y un gráfico.
+```{r}
+set.seed(123)  
+mu <- c(0, 0, 0) 
+sigma <- matrix(c(1, 0.5, 0.3,  
+                  0.5, 1, 0.2,
+                  0.3, 0.2, 1), 
+                nrow = 3)
+
+MV <- mvrnorm(n = 100, mu = mu, Sigma = sigma)
+head(MV)  
+```
+Calcular la media y covarianza de $MV$
+```{r}
+MV_barra <- colMeans(MV)
+cov_MV <- cov(MV)
+```
+
+Calcular las distancias de Mahalanobis para cada observación
+```{r}
+dist_mahalanobis <- mahalanobis(MV, center = MV_barra, cov = cov_MV)
+head(dist_mahalanobis)  
+```
+Definir la matriz de transformación $T_3$
+```{r}
+# 
+T_3 <- matrix(c(1.2, 0.3, 0.0,
+              0.2, 1.1, 0.0,
+              0.0, 0.0, 1.5), nrow = 3)
+```
+
+Aplicar la transformación lineal a los MV
+```{r}
+# 
+Y_3 <- MV %*% T_3
+head(Y_3) 
+```
+Calcular la media y covarianza de $Y_3$
+```{r}
+Y_3_barra <- colMeans(Y_3)
+cov_Y_3 <- cov(Y_3)
+```
+
+Calcular las distancias de Mahalanobis para $Y_3$
+```{r}
+dist_mahalanobis_Y_3 <- mahalanobis(Y_3, center = Y_3_barra, cov = cov_Y_3)
+head(dist_mahalanobis_Y_3)  
+
+```
+a. ¿Son las distancias de Mahalanobis iguales antes y después de la transformación lineal? Explica.
 
 ### Respuesta al apartado a
 
+Sí, porque la distancia de Mahalanobis es invariante frente a transformaciones lineales invertibles de las variables.
+
+b. La distancia de Mahalanobis al cuadrado debería seguir una distribución $\chi^2$ con $p$ grados de libertad, donde $p$ es el número de variables. Verifica si esto se cumple en tu caso. Justifica tu respuesta en función del test estadístico apropiado y un gráfico.
+
 ### Respuesta al apartado b
+Definimos las distancias al cuadrado:
+```{r}
+dist_mahalanobis_cuadrado <- dist_mahalanobis^2
+```
+
+La prueba de Kolmogorov-Smirnov (K-S) nos permite comparar la distribución empírica de las distancias de Mahalanobis al cuadrado con la distribución teórica $\chi_3^2$
+
+```{r}
+ks.test(dist_mahalanobis_cuadrado, "pchisq", df = 3)
+```
+Como el `p-valor` es menor a $0.05$, rechazamos la hipótesis nula de que los datos siguen una distribución $\chi_3^2$.
+
+
+Graficar Q-Q plot para las distancias de Mahalanobis
+```{r}
+qqplot(qchisq(ppoints(100), df = 3), dist_mahalanobis_cuadrado,
+       main = "Q-Q plot (Distancias Originales vs Chi-Squared)",
+       xlab = "Cuantiles teóricos Chi^2",
+       ylab = "Distancias de Mahalanobis al cuadrado")
+abline(0, 1, col = "red")  # Línea de referencia
+```
+
+Como los puntos del gráfico no se alinean a lo largo de la línea de referencia, esto indica que los datos no siguen la distribución teórica esperada, $\chi_3^2$.
