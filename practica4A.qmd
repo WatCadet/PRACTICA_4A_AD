@@ -13,7 +13,7 @@ Rendering:
 
 **Dídac Capó Peña**:
 
-[Ver en GitHub](https://github.com/WatCadet/PRACTICA_4_AD)
+[Ver en GitHub](https://github.com/WatCadet/PRACTICA_4A_AD)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
