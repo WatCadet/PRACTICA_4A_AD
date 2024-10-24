@@ -95,7 +95,7 @@ Transformamos la matriz de datos `M` en Y usando $Y = \cdot T$
 Y <- M %*% T
 ```
 
-Calculamos el vector de medias de las variables transformadas Y, sabemos por teoria que $\overline{y}^t = \overline{x}^t T$
+Calculamos el vector de medias de las variables transformadas Y, sabemos por teoria que $\overline{y}^t = \overline{m}^t T$
 
 Calculamos el vector de medias de $M$:
 ```{r}
@@ -128,7 +128,7 @@ S_y
 S_Y2 <- cov(Y)
 S_Y2
 ```
-
+También coinciden. 
 
 ## Problema 3
 
@@ -206,26 +206,22 @@ Sí, porque la distancia de Mahalanobis es invariante frente a transformaciones 
 b. La distancia de Mahalanobis al cuadrado debería seguir una distribución $\chi^2$ con $p$ grados de libertad, donde $p$ es el número de variables. Verifica si esto se cumple en tu caso. Justifica tu respuesta en función del test estadístico apropiado y un gráfico.
 
 ### Respuesta al apartado b
-Definimos las distancias al cuadrado:
-```{r}
-dist_mahalanobis_cuadrado <- dist_mahalanobis^2
-```
 
-La prueba de Kolmogorov-Smirnov (K-S) nos permite comparar la distribución empírica de las distancias de Mahalanobis al cuadrado con la distribución teórica $\chi_3^2$
+La prueba de Kolmogorov-Smirnov (K-S) nos permite comparar la distribución empírica de las distancias de Mahalanobis al cuadrado(la función `mahalanobis` ya nos da los cuadrados) con la distribución teórica $\chi_3^2$
 
 ```{r}
-ks.test(dist_mahalanobis_cuadrado, "pchisq", df = 3)
+ks.test(dist_mahalanobis, "pchisq", df = 3)
 ```
-Como el `p-valor` es menor a $0.05$, rechazamos la hipótesis nula de que los datos siguen una distribución $\chi_3^2$.
+Como el `p-valor` es alto,$0.9751$, aceptamos la hipótesis nula de que las distàncias siguen una distribución $\chi_3^2$.
 
 
 Graficar Q-Q plot para las distancias de Mahalanobis
 ```{r}
-qqplot(qchisq(ppoints(100), df = 3), dist_mahalanobis_cuadrado,
+qqplot(qchisq(ppoints(100), df = 3), dist_mahalanobis,
        main = "Q-Q plot (Distancias Originales vs Chi-Squared)",
        xlab = "Cuantiles teóricos Chi^2",
        ylab = "Distancias de Mahalanobis al cuadrado")
 abline(0, 1, col = "red")  # Línea de referencia
 ```
 
-Como los puntos del gráfico no se alinean a lo largo de la línea de referencia, esto indica que los datos no siguen la distribución teórica esperada, $\chi_3^2$.
+Como los puntos del gráfico se alinean a lo largo de la línea de referencia, esto indica que los datos siguen la distribución teórica esperada, $\chi_3^2$.

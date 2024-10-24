@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2024-10-16">
+<meta name="dcterms.date" content="2024-10-24">
 
 <title>Ejercicios de estadística multivariante, parte I</title>
 <style>
@@ -58,16 +58,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="practica4_files/libs/clipboard/clipboard.min.js"></script>
-<script src="practica4_files/libs/quarto-html/quarto.js"></script>
-<script src="practica4_files/libs/quarto-html/popper.min.js"></script>
-<script src="practica4_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="practica4_files/libs/quarto-html/anchor.min.js"></script>
-<link href="practica4_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="practica4_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="practica4_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="practica4_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="practica4_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="practica4A_files/libs/clipboard/clipboard.min.js"></script>
+<script src="practica4A_files/libs/quarto-html/quarto.js"></script>
+<script src="practica4A_files/libs/quarto-html/popper.min.js"></script>
+<script src="practica4A_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="practica4A_files/libs/quarto-html/anchor.min.js"></script>
+<link href="practica4A_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="practica4A_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="practica4A_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="practica4A_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="practica4A_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -142,7 +142,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 16, 2024</p>
+      <p class="date">October 24, 2024</p>
     </div>
   </div>
   
@@ -226,7 +226,7 @@ X5  1.50336575  9.52337863 -2.30942683 -3.92522261 31.576867</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> M <span class="sc">%*%</span> T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Calculamos el vector de medias de las variables transformadas Y, sabemos por teoria que <span class="math inline">\(\overline{y}^t = \overline{x}^t T\)</span></p>
+<p>Calculamos el vector de medias de las variables transformadas Y, sabemos por teoria que <span class="math inline">\(\overline{y}^t = \overline{m}^t T\)</span></p>
 <p>Calculamos el vector de medias de <span class="math inline">\(M\)</span>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m_barra <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(M)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -273,6 +273,7 @@ X5  1.50336575  9.52337863 -2.30942683 -3.92522261 31.576867</code></pre>
 [4,] -0.84399417 -0.52688917 -0.1283251 13.8674316</code></pre>
 </div>
 </div>
+<p>También coinciden.</p>
 </section>
 </section>
 <section id="problema-3" class="level2">
@@ -369,39 +370,35 @@ X5  1.50336575  9.52337863 -2.30942683 -3.92522261 31.576867</code></pre>
 </section>
 <section id="respuesta-al-apartado-b" class="level3">
 <h3 class="anchored" data-anchor-id="respuesta-al-apartado-b">Respuesta al apartado b</h3>
-<p>Definimos las distancias al cuadrado:</p>
+<p>La prueba de Kolmogorov-Smirnov (K-S) nos permite comparar la distribución empírica de las distancias de Mahalanobis al cuadrado(la función <code>mahalanobis</code> ya nos da los cuadrados) con la distribución teórica <span class="math inline">\(\chi_3^2\)</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>dist_mahalanobis_cuadrado <span class="ot">&lt;-</span> dist_mahalanobis<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>La prueba de Kolmogorov-Smirnov (K-S) nos permite comparar la distribución empírica de las distancias de Mahalanobis al cuadrado con la distribución teórica <span class="math inline">\(\chi_3^2\)</span></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(dist_mahalanobis_cuadrado, <span class="st">"pchisq"</span>, <span class="at">df =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(dist_mahalanobis, <span class="st">"pchisq"</span>, <span class="at">df =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Asymptotic one-sample Kolmogorov-Smirnov test
 
-data:  dist_mahalanobis_cuadrado
-D = 0.39797, p-value = 3.502e-14
+data:  dist_mahalanobis
+D = 0.048043, p-value = 0.9751
 alternative hypothesis: two-sided</code></pre>
 </div>
 </div>
-<p>Como el <code>p-valor</code> es menor a <span class="math inline">\(0.05\)</span>, rechazamos la hipótesis nula de que los datos siguen una distribución <span class="math inline">\(\chi_3^2\)</span>.</p>
+<p>Como el <code>p-valor</code> es alto,<span class="math inline">\(0.9751\)</span>, aceptamos la hipótesis nula de que las distàncias siguen una distribución <span class="math inline">\(\chi_3^2\)</span>.</p>
 <p>Graficar Q-Q plot para las distancias de Mahalanobis</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqplot</span>(<span class="fu">qchisq</span>(<span class="fu">ppoints</span>(<span class="dv">100</span>), <span class="at">df =</span> <span class="dv">3</span>), dist_mahalanobis_cuadrado,</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="st">"Q-Q plot (Distancias Originales vs Chi-Squared)"</span>,</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"Cuantiles teóricos Chi^2"</span>,</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="st">"Distancias de Mahalanobis al cuadrado"</span>)</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)  <span class="co"># Línea de referencia</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqplot</span>(<span class="fu">qchisq</span>(<span class="fu">ppoints</span>(<span class="dv">100</span>), <span class="at">df =</span> <span class="dv">3</span>), dist_mahalanobis,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">main =</span> <span class="st">"Q-Q plot (Distancias Originales vs Chi-Squared)"</span>,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"Cuantiles teóricos Chi^2"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="st">"Distancias de Mahalanobis al cuadrado"</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)  <span class="co"># Línea de referencia</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="practica4_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="practica4A_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Como los puntos del gráfico no se alinean a lo largo de la línea de referencia, esto indica que los datos no siguen la distribución teórica esperada, <span class="math inline">\(\chi_3^2\)</span>.</p>
+<p>Como los puntos del gráfico se alinean a lo largo de la línea de referencia, esto indica que los datos siguen la distribución teórica esperada, <span class="math inline">\(\chi_3^2\)</span>.</p>
 </section>
 </section>
 
